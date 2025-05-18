@@ -7,30 +7,38 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="index.html" data-lang-key="navHome">首页</a></li>
-                <li><a href="about.html" data-lang-key="navAbout">关于</a></li>
-                <li><a href="projects.html" data-lang-key="navProjects">项目</a></li>
-                <li><a href="contact.html" data-lang-key="navContact">联系</a></li>
-            </ul>
-            <div class="language-switcher">
-                <button id="lang-zh">中文</button>
-                <button id="lang-en">English</button>
-            </div>
-        </nav>
-    </header>
+    <div class="container">
+        <header>
+            <nav>
+                <ul>
+                    <li><a href="index.html" data-lang-key="navHome">首页</a></li>
+                    <li><a href="about.html" data-lang-key="navAbout">关于</a></li>
+                    <li><a href="projects.html" data-lang-key="navProjects">项目</a></li>
+                    <li><a href="contact.html" data-lang-key="navContact">联系</a></li>
+                </ul>
+                <div class="language-switcher">
+                    <button id="lang-zh">中文</button>
+                    <button id="lang-en">English</button>
+                </div>
+            </nav>
+        </header>
 
-    <main>
-        <h1 data-lang-key="aboutPageTitle">关于我</h1>
-        <p data-lang-key="aboutText">这里是关于我的介绍。</p>
-    </main>
+        <main>
+            <section class="about">
+                <h1 data-lang-key="aboutTitle">关于我</h1>
+                <div class="about-content">
+                    <img src="avatar.jpg" alt="个人照片" class="avatar">
+                    <div class="about-text">
+                        <p data-lang-key="aboutText">这里是关于我的介绍...</p>
+                    </div>
+                </div>
+            </section>
+        </main>
 
-    <footer>
-        <p data-lang-key="footerText">&copy; 2023 你的名字</p>
-    </footer>
-
+        <footer>
+            <p data-lang-key="footerText">&copy; 2023 你的名字</p>
+        </footer>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

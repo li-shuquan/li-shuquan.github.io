@@ -7,30 +7,47 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="index.html" data-lang-key="navHome">首页</a></li>
-                <li><a href="about.html" data-lang-key="navAbout">关于</a></li>
-                <li><a href="projects.html" data-lang-key="navProjects">项目</a></li>
-                <li><a href="contact.html" data-lang-key="navContact">联系</a></li>
-            </ul>
-            <div class="language-switcher">
-                <button id="lang-zh">中文</button>
-                <button id="lang-en">English</button>
-            </div>
-        </nav>
-    </header>
+    <div class="container">
+        <header>
+            <nav>
+                <ul>
+                    <li><a href="index.html" data-lang-key="navHome">首页</a></li>
+                    <li><a href="about.html" data-lang-key="navAbout">关于</a></li>
+                    <li><a href="projects.html" data-lang-key="navProjects">项目</a></li>
+                    <li><a href="contact.html" data-lang-key="navContact">联系</a></li>
+                </ul>
+                <div class="language-switcher">
+                    <button id="lang-zh">中文</button>
+                    <button id="lang-en">English</button>
+                </div>
+            </nav>
+        </header>
 
-    <main>
-        <h1 data-lang-key="contactPageTitle">联系我</h1>
-        <p data-lang-key="contactText">通过以下方式联系我。</p>
-    </main>
+        <main>
+            <section class="contact">
+                <h1 data-lang-key="contactTitle">联系我</h1>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name" data-lang-key="formName">姓名：</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" data-lang-key="formEmail">邮箱：</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message" data-lang-key="formMessage">留言：</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit" data-lang-key="formSubmit">发送</button>
+                </form>
+            </section>
+        </main>
 
-    <footer>
-        <p data-lang-key="footerText">&copy; 2023 你的名字</p>
-    </footer>
-
+        <footer>
+            <p data-lang-key="footerText">&copy; 2023 你的名字</p>
+        </footer>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
