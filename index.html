@@ -1,39 +1,993 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-lang-key="homeTitle">我的个人网站</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>李书全 - 个人简历</title>
+  <!-- 引入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 引入 Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1a365d', // 深蓝主色调，体现学术专业性
+            secondary: '#3182ce', // 中蓝色辅助色
+            accent: '#4299e1', // 浅蓝色强调色
+            neutral: {
+              100: '#f7fafc',
+              200: '#edf2f7',
+              300: '#e2e8f0',
+              400: '#cbd5e0',
+              500: '#a0aec0',
+              600: '#718096',
+              700: '#4a5568',
+              800: '#2d3748',
+              900: '#1a202c',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            serif: ['Merriweather', 'Georgia', 'serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .transition-custom {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+    }
+  </style>
+  
+  <!-- 额外样式 -->
+  <style>
+    /* 平滑滚动 */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    /* 加载动画 */
+    .loader {
+      border-top-color: #3182ce;
+      animation: spinner 0.6s linear infinite;
+    }
+    
+    @keyframes spinner {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* 卡片悬停效果 */
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    /* 语言切换动画 */
+    .lang-transition {
+      transition: opacity 0.3s ease-in-out;
+    }
+    
+    .lang-fade {
+      opacity: 0;
+    }
+  </style>
 </head>
-<body>
-    <div class="container">
-        <header>
-            <nav>
-                <ul>
-                    <li><a href="index.html" data-lang-key="navHome">首页</a></li>
-                    <li><a href="about.html" data-lang-key="navAbout">关于</a></li>
-                    <li><a href="projects.html" data-lang-key="navProjects">项目</a></li>
-                    <li><a href="contact.html" data-lang-key="navContact">联系</a></li>
-                </ul>
-                <div class="language-switcher">
-                    <button id="lang-zh">中文</button>
-                    <button id="lang-en">English</button>
-                </div>
-            </nav>
-        </header>
+<body class="bg-neutral-100 text-neutral-800 min-h-screen flex flex-col">
+  <!-- 加载动画 -->
+  <div id="loader" class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+    <div class="loader w-12 h-12 border-4 border-neutral-200 rounded-full"></div>
+  </div>
 
-        <main>
-            <section class="hero">
-                <h1 data-lang-key="welcomeMessage">欢迎来到我的网站</h1>
-                <p data-lang-key="introText">这是一个展示我的作品和经历的个人网站</p>
-            </section>
-        </main>
-
-        <footer>
-            <p data-lang-key="footerText">&copy; 2023 你的名字</p>
-        </footer>
+  <!-- 导航栏 -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-300" id="navbar">
+    <div class="container mx-auto px-4 py-3">
+      <nav class="flex justify-between items-center">
+        <!-- 个人标识 -->
+        <div class="flex items-center">
+          <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white mr-3">
+            <span class="font-bold text-lg">李</span>
+          </div>
+          <span class="text-xl font-bold text-primary">李书全</span>
+        </div>
+        
+        <!-- 桌面端导航 -->
+        <div class="hidden md:flex space-x-8">
+          <a href="#about" class="text-neutral-700 hover:text-primary transition-custom font-medium">关于我</a>
+          <a href="#education" class="text-neutral-700 hover:text-primary transition-custom font-medium">教育背景</a>
+          <a href="#experience" class="text-neutral-700 hover:text-primary transition-custom font-medium">工作经验</a>
+          <a href="#skills" class="text-neutral-700 hover:text-primary transition-custom font-medium">技能</a>
+          <a href="#contact" class="text-neutral-700 hover:text-primary transition-custom font-medium">联系方式</a>
+        </div>
+        
+        <!-- 语言切换 -->
+        <div class="flex items-center space-x-2">
+          <button id="langToggle" class="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium flex items-center transition-custom hover:bg-primary/90">
+            <i class="fa fa-language mr-1"></i>
+            <span id="currentLang">中文</span>
+          </button>
+          
+          <!-- 移动端菜单按钮 -->
+          <button id="menuToggle" class="md:hidden text-neutral-700 hover:text-primary">
+            <i class="fa fa-bars text-xl"></i>
+          </button>
+        </div>
+      </nav>
     </div>
-    <script src="script.js"></script>
+    
+    <!-- 移动端导航菜单 -->
+    <div id="mobileMenu" class="md:hidden bg-white shadow-lg absolute w-full left-0 top-full transform -translate-y-full opacity-0 transition-all duration-300 pointer-events-none">
+      <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+        <a href="#about" class="text-neutral-700 hover:text-primary py-2 border-b border-neutral-100">关于我</a>
+        <a href="#education" class="text-neutral-700 hover:text-primary py-2 border-b border-neutral-100">教育背景</a>
+        <a href="#experience" class="text-neutral-700 hover:text-primary py-2 border-b border-neutral-100">工作经验</a>
+        <a href="#skills" class="text-neutral-700 hover:text-primary py-2 border-b border-neutral-100">技能</a>
+        <a href="#contact" class="text-neutral-700 hover:text-primary py-2">联系方式</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main class="flex-grow">
+    <!-- 英雄区域 -->
+    <section id="hero" class="relative bg-gradient-to-br from-primary to-secondary text-white py-20 md:py-32 overflow-hidden">
+      <div class="absolute inset-0 bg-[url('https://picsum.photos/id/180/1920/1080')] bg-cover bg-center opacity-10"></div>
+      <div class="absolute inset-0 bg-gradient-to-b from-primary/90 to-secondary/90"></div>
+      
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-bold leading-tight mb-6 text-shadow">
+            <span class="lang-zh">李书全</span>
+            <span class="lang-en hidden">Shuquan Li</span>
+          </h1>
+          <p class="text-[clamp(1.2rem,2vw,1.5rem)] text-white/90 mb-8">
+            <span class="lang-zh">会计专业 | 计算机爱好者</span>
+            <span class="lang-en hidden">Accounting Professional | Computer Enthusiast</span>
+          </p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="#contact" class="bg-white text-primary px-6 py-3 rounded-full font-medium hover:bg-neutral-100 transition-custom shadow-lg">
+              <span class="lang-zh">联系我</span>
+              <span class="lang-en hidden">Contact Me</span>
+            </a>
+            <a href="#about" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-full font-medium hover:bg-white/10 transition-custom">
+              <span class="lang-zh">了解更多</span>
+              <span class="lang-en hidden">Learn More</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 波浪分隔符 -->
+      <div class="absolute bottom-0 left-0 w-full">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" class="w-full h-auto">
+          <path fill="#f7fafc" fill-opacity="1" d="M0,96L48,85.3C96,75,192,53,288,53.3C384,53,480,75,576,80C672,85,768,75,864,69.3C960,64,1056,64,1152,69.3C1248,75,1344,85,1392,90.7L1440,96L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z"></path>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 关于我 -->
+    <section id="about" class="py-16 md:py-24 bg-neutral-100">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+            <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-neutral-800 mb-4">
+              <span class="lang-zh">关于我</span>
+              <span class="lang-en hidden">About Me</span>
+            </h2>
+            <div class="w-20 h-1 bg-primary mx-auto"></div>
+          </div>
+          
+          <div class="grid md:grid-cols-3 gap-8 items-center">
+            <div class="md:col-span-1">
+              <div class="relative">
+                <div class="absolute -top-4 -left-4 w-full h-full border-4 border-primary/20 rounded-lg"></div>
+                <img src="https://picsum.photos/id/1005/400/400" alt="李书全照片" class="w-full h-auto rounded-lg shadow-xl relative z-10">
+              </div>
+            </div>
+            
+            <div class="md:col-span-2 space-y-6">
+              <p class="text-lg text-neutral-700 leading-relaxed">
+                <span class="lang-zh">
+                  我叫李书全，毕业于郑州商学院会计专业，目前在郑州一家公司担任会计工作。我对数字敏感，具备良好的财务分析能力和严谨的工作态度。在工作之余，我对计算机技术产生了浓厚的兴趣，尤其是前端开发领域。
+                </span>
+                <span class="lang-en hidden">
+                  My name is Shuquan Li. I graduated from Zhengzhou University of Business with a major in Accounting. Currently, I work as an accountant in a company based in Zhengzhou. I have a strong sensitivity to numbers, excellent financial analysis skills, and a rigorous work attitude. In my spare time, I've developed a keen interest in computer technology, particularly in the field of front-end development.
+                </span>
+              </p>
+              
+              <p class="text-lg text-neutral-700 leading-relaxed">
+                <span class="lang-zh">
+                  我掌握中英文两种语言，并取得了C1驾照。我相信会计知识与计算机技能的结合将为财务领域带来创新的解决方案。
+                </span>
+                <span class="lang-en hidden">
+                  I am proficient in both Chinese and English, and I hold a C1 driving license. I believe that the combination of accounting knowledge and computer skills will bring innovative solutions to the financial field.
+                </span>
+              </p>
+              
+              <div class="grid grid-cols-2 gap-4 mt-8">
+                <div class="flex items-center">
+                  <i class="fa fa-user-circle text-primary mr-3 text-xl"></i>
+                  <span>
+                    <span class="lang-zh font-medium mr-2">姓名：</span>
+                    <span class="lang-en hidden font-medium mr-2">Name：</span>
+                    李书全 / Shuquan Li
+                  </span>
+                </div>
+                
+                <div class="flex items-center">
+                  <i class="fa fa-graduation-cap text-primary mr-3 text-xl"></i>
+                  <span>
+                    <span class="lang-zh font-medium mr-2">学历：</span>
+                    <span class="lang-en hidden font-medium mr-2">Education：</span>
+                    <span class="lang-zh">本科</span>
+                    <span class="lang-en hidden">Bachelor's Degree</span>
+                  </span>
+                </div>
+                
+                <div class="flex items-center">
+                  <i class="fa fa-briefcase text-primary mr-3 text-xl"></i>
+                  <span>
+                    <span class="lang-zh font-medium mr-2">职业：</span>
+                    <span class="lang-en hidden font-medium mr-2">Occupation：</span>
+                    <span class="lang-zh">会计</span>
+                    <span class="lang-en hidden">Accountant</span>
+                  </span>
+                </div>
+                
+                <div class="flex items-center">
+                  <i class="fa fa-language text-primary mr-3 text-xl"></i>
+                  <span>
+                    <span class="lang-zh font-medium mr-2">语言：</span>
+                    <span class="lang-en hidden font-medium mr-2">Languages：</span>
+                    <span class="lang-zh">中文、英文</span>
+                    <span class="lang-en hidden">Chinese, English</span>
+                  </span>
+                </div>
+              </div>
+              
+              <div class="mt-8">
+                <a href="#contact" class="inline-flex items-center text-primary font-medium hover:underline">
+                  <span class="lang-zh">联系我</span>
+                  <span class="lang-en hidden">Get in Touch</span>
+                  <i class="fa fa-arrow-right ml-2"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 教育背景 -->
+    <section id="education" class="py-16 md:py-24 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+            <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-neutral-800 mb-4">
+              <span class="lang-zh">教育背景</span>
+              <span class="lang-en hidden">Education</span>
+            </h2>
+            <div class="w-20 h-1 bg-primary mx-auto"></div>
+          </div>
+          
+          <div class="relative">
+            <!-- 时间线 -->
+            <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-1 bg-neutral-200 transform md:-translate-x-1/2"></div>
+            
+            <!-- 教育经历 1 -->
+            <div class="mb-12 relative">
+              <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 md:pr-12 md:text-right mb-6 md:mb-0">
+                  <div class="bg-neutral-100 p-6 rounded-lg shadow-sm card-hover">
+                    <h3 class="text-xl font-bold text-primary mb-2">
+                      <span class="lang-zh">郑州商学院</span>
+                      <span class="lang-en hidden">Zhengzhou University of Business</span>
+                    </h3>
+                    <p class="text-neutral-600 mb-3">
+                      <span class="lang-zh">会计专业</span>
+                      <span class="lang-en hidden">Bachelor of Accounting</span>
+                    </p>
+                    <p class="text-neutral-500">
+                      <span class="lang-zh">2016年9月 - 2020年6月</span>
+                      <span class="lang-en hidden">September 2016 - June 2020</span>
+                    </p>
+                  </div>
+                </div>
+                
+                <div class="absolute left-0 md:left-1/2 w-6 h-6 rounded-full bg-primary border-4 border-white transform md:-translate-x-1/2 z-10"></div>
+                
+                <div class="md:w-1/2 md:pl-12 md:text-left hidden md:block"></div>
+              </div>
+            </div>
+            
+            <!-- 教育经历 2 -->
+            <div class="relative">
+              <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 md:pr-12 md:text-right hidden md:block"></div>
+                
+                <div class="absolute left-0 md:left-1/2 w-6 h-6 rounded-full bg-secondary border-4 border-white transform md:-translate-x-1/2 z-10"></div>
+                
+                <div class="md:w-1/2 md:pl-12 mb-6 md:mb-0">
+                  <div class="bg-neutral-100 p-6 rounded-lg shadow-sm card-hover">
+                    <h3 class="text-xl font-bold text-primary mb-2">
+                      <span class="lang-zh">计算机技能培训</span>
+                      <span class="lang-en hidden">Computer Skills Training</span>
+                    </h3>
+                    <p class="text-neutral-600 mb-3">
+                      <span class="lang-zh">前端开发</span>
+                      <span class="lang-en hidden">Front-end Development</span>
+                    </p>
+                    <p class="text-neutral-500">
+                      <span class="lang-zh">2023年3月 - 2023年9月</span>
+                      <span class="lang-en hidden">March 2023 - September 2023</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 工作经验 -->
+    <section id="experience" class="py-16 md:py-24 bg-neutral-100">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+            <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-neutral-800 mb-4">
+              <span class="lang-zh">工作经验</span>
+              <span class="lang-en hidden">Work Experience</span>
+            </h2>
+            <div class="w-20 h-1 bg-primary mx-auto"></div>
+          </div>
+          
+          <!-- 工作经验卡片 -->
+          <div class="space-y-8">
+            <!-- 工作经验 1 -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+              <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/3 bg-primary text-white p-6 flex flex-col justify-center">
+                  <h3 class="text-xl font-bold mb-2">
+                    <span class="lang-zh">郑州XX有限公司</span>
+                    <span class="lang-en hidden">Zhengzhou XX Co., Ltd.</span>
+                  </h3>
+                  <p class="text-white/80">
+                    <span class="lang-zh">会计</span>
+                    <span class="lang-en hidden">Accountant</span>
+                  </p>
+                  <p class="mt-4 text-sm text-white/70">
+                    <span class="lang-zh">2020年7月 - 至今</span>
+                    <span class="lang-en hidden">July 2020 - Present</span>
+                  </p>
+                </div>
+                
+                <div class="md:w-2/3 p-6">
+                  <ul class="space-y-3 text-neutral-700">
+                    <li class="flex items-start">
+                      <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                      <span>
+                        <span class="lang-zh">负责公司日常会计核算工作，包括账务处理、凭证录入、报表编制等。</span>
+                        <span class="lang-en hidden">Responsible for daily accounting tasks, including bookkeeping, voucher entry, and financial statement preparation.</span>
+                      </span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                      <span>
+                        <span class="lang-zh">完成月度、季度、年度税务申报与缴纳，确保税务合规。</span>
+                        <span class="lang-en hidden">Complete monthly, quarterly, and annual tax filings to ensure tax compliance.</span>
+                      </span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                      <span>
+                        <span class="lang-zh">协助财务经理进行预算编制、成本分析和财务决策支持。</span>
+                        <span class="lang-en hidden">Assist the finance manager in budget preparation, cost analysis, and financial decision-making support.</span>
+                      </span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                      <span>
+                        <span class="lang-zh">参与公司财务系统升级项目，优化财务流程和提高工作效率。</span>
+                        <span class="lang-en hidden">Participate in the company's financial system upgrade project to optimize financial processes and improve work efficiency.</span>
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 工作经验 2 -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden card-hover">
+              <div class="flex flex-col md:flex-row">
+                <div class="md:w-1/3 bg-secondary text-white p-6 flex flex-col justify-center">
+                  <h3 class="text-xl font-bold mb-2">
+                    <span class="lang-zh">郑州XX会计师事务所</span>
+                    <span class="lang-en hidden">Zhengzhou XX Accounting Firm</span>
+                  </h3>
+                  <p class="text-white/80">
+                    <span class="lang-zh">审计实习生</span>
+                    <span class="lang-en hidden">Audit Intern</span>
+                  </p>
+                  <p class="mt-4 text-sm text-white/70">
+                    <span class="lang-zh">2019年7月 - 2019年9月</span>
+                    <span class="lang-en hidden">July 2019 - September 2019</span>
+                  </p>
+                </div>
+                
+                <div class="md:w-2/3 p-6">
+                  <ul class="space-y-3 text-neutral-700">
+                    <li class="flex items-start">
+                      <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                      <span>
+                        <span class="lang-zh">协助注册会计师完成客户年度审计工作，包括财务报表分析和凭证抽查。</span>
+                        <span class="lang-en hidden">Assist CPAs in completing annual audits for clients, including financial statement analysis and voucher sampling.</span>
+                      </span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                      <span>
+                        <span class="lang-zh">参与税务筹划项目，为客户提供税务优化建议。</span>
+                        <span class="lang-en hidden">Participate in tax planning projects to provide clients with tax optimization suggestions.</span>
+                      </span>
+                    </li>
+                    <li class="flex items-start">
+                      <i class="fa fa-check-circle text-primary mt-1 mr-3"></i>
+                      <span>
+                        <span class="lang-zh">整理审计工作底稿，确保审计证据的完整性和合规性。</span>
+                        <span class="lang-en hidden">Organize audit working papers to ensure the completeness and compliance of audit evidence.</span>
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 技能 -->
+    <section id="skills" class="py-16 md:py-24 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+            <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-neutral-800 mb-4">
+              <span class="lang-zh">专业技能</span>
+              <span class="lang-en hidden">Professional Skills</span>
+            </h2>
+            <div class="w-20 h-1 bg-primary mx-auto"></div>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-8">
+            <!-- 左侧技能 -->
+            <div>
+              <h3 class="text-xl font-bold text-primary mb-6 flex items-center">
+                <i class="fa fa-calculator mr-3"></i>
+                <span class="lang-zh">财务与会计技能</span>
+                <span class="lang-en hidden">Financial & Accounting Skills</span>
+              </h3>
+              
+              <div class="space-y-6">
+                <!-- 技能项 -->
+                <div>
+                  <div class="flex justify-between mb-2">
+                    <span class="font-medium text-neutral-700">
+                      <span class="lang-zh">财务报表分析</span>
+                      <span class="lang-en hidden">Financial Statement Analysis</span>
+                    </span>
+                    <span class="text-neutral-600">90%</span>
+                  </div>
+                  <div class="w-full bg-neutral-200 rounded-full h-2.5">
+                    <div class="bg-primary h-2.5 rounded-full" style="width: 90%"></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div class="flex justify-between mb-2">
+                    <span class="font-medium text-neutral-700">
+                      <span class="lang-zh">税务筹划</span>
+                      <span class="lang-en hidden">Tax Planning</span>
+                    </span>
+                    <span class="text-neutral-600">85%</span>
+                  </div>
+                  <div class="w-full bg-neutral-200 rounded-full h-2.5">
+                    <div class="bg-primary h-2.5 rounded-full" style="width: 85%"></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div class="flex justify-between mb-2">
+                    <span class="font-medium text-neutral-700">
+                      <span class="lang-zh">成本核算</span>
+                      <span class="lang-en hidden">Cost Accounting</span>
+                    </span>
+                    <span class="text-neutral-600">80%</span>
+                  </div>
+                  <div class="w-full bg-neutral-200 rounded-full h-2.5">
+                    <div class="bg-primary h-2.5 rounded-full" style="width: 80%"></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div class="flex justify-between mb-2">
+                    <span class="font-medium text-neutral-700">
+                      <span class="lang-zh">预算管理</span>
+                      <span class="lang-en hidden">Budget Management</span>
+                    </span>
+                    <span class="text-neutral-600">85%</span>
+                  </div>
+                  <div class="w-full bg-neutral-200 rounded-full h-2.5">
+                    <div class="bg-primary h-2.5 rounded-full" style="width: 85%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 右侧技能 -->
+            <div>
+              <h3 class="text-xl font-bold text-primary mb-6 flex items-center">
+                <i class="fa fa-code mr-3"></i>
+                <span class="lang-zh">计算机技能</span>
+                <span class="lang-en hidden">Computer Skills</span>
+              </h3>
+              
+              <div class="space-y-6">
+                <!-- 技能项 -->
+                <div>
+                  <div class="flex justify-between mb-2">
+                    <span class="font-medium text-neutral-700">
+                      <span class="lang-zh">HTML/CSS/JavaScript</span>
+                      <span class="lang-en hidden">HTML/CSS/JavaScript</span>
+                    </span>
+                    <span class="text-neutral-600">75%</span>
+                  </div>
+                  <div class="w-full bg-neutral-200 rounded-full h-2.5">
+                    <div class="bg-secondary h-2.5 rounded-full" style="width: 75%"></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div class="flex justify-between mb-2">
+                    <span class="font-medium text-neutral-700">
+                      <span class="lang-zh">Office办公软件</span>
+                      <span class="lang-en hidden">Office Software</span>
+                    </span>
+                    <span class="text-neutral-600">95%</span>
+                  </div>
+                  <div class="w-full bg-neutral-200 rounded-full h-2.5">
+                    <div class="bg-secondary h-2.5 rounded-full" style="width: 95%"></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div class="flex justify-between mb-2">
+                    <span class="font-medium text-neutral-700">
+                      <span class="lang-zh">财务软件应用</span>
+                      <span class="lang-en hidden">Financial Software</span>
+                    </span>
+                    <span class="text-neutral-600">90%</span>
+                  </div>
+                  <div class="w-full bg-neutral-200 rounded-full h-2.5">
+                    <div class="bg-secondary h-2.5 rounded-full" style="width: 90%"></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <div class="flex justify-between mb-2">
+                    <span class="font-medium text-neutral-700">
+                      <span class="lang-zh">数据分析</span>
+                      <span class="lang-en hidden">Data Analysis</span>
+                    </span>
+                    <span class="text-neutral-600">80%</span>
+                  </div>
+                  <div class="w-full bg-neutral-200 rounded-full h-2.5">
+                    <div class="bg-secondary h-2.5 rounded-full" style="width: 80%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 其他技能 -->
+          <div class="mt-16">
+            <h3 class="text-xl font-bold text-primary mb-6 text-center">
+              <span class="lang-zh">其他技能</span>
+              <span class="lang-en hidden">Other Skills</span>
+            </h3>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div class="bg-neutral-100 p-4 rounded-lg text-center card-hover">
+                <div class="text-primary text-3xl mb-2">
+                  <i class="fa fa-language"></i>
+                </div>
+                <h4 class="font-medium mb-1">
+                  <span class="lang-zh">语言能力</span>
+                  <span class="lang-en hidden">Languages</span>
+                </h4>
+                <p class="text-sm text-neutral-600">
+                  <span class="lang-zh">中文（母语）、英文（流利）</span>
+                  <span class="lang-en hidden">Chinese (Native), English (Fluent)</span>
+                </p>
+              </div>
+              
+              <div class="bg-neutral-100 p-4 rounded-lg text-center card-hover">
+                <div class="text-primary text-3xl mb-2">
+                  <i class="fa fa-car"></i>
+                </div>
+                <h4 class="font-medium mb-1">
+                  <span class="lang-zh">驾驶执照</span>
+                  <span class="lang-en hidden">Driving License</span>
+                </h4>
+                <p class="text-sm text-neutral-600">
+                  <span class="lang-zh">C1驾照</span>
+                  <span class="lang-en hidden">C1 License</span>
+                </p>
+              </div>
+              
+              <div class="bg-neutral-100 p-4 rounded-lg text-center card-hover">
+                <div class="text-primary text-3xl mb-2">
+                  <i class="fa fa-users"></i>
+                </div>
+                <h4 class="font-medium mb-1">
+                  <span class="lang-zh">团队协作</span>
+                  <span class="lang-en hidden">Teamwork</span>
+                </h4>
+                <p class="text-sm text-neutral-600">
+                  <span class="lang-zh">良好的沟通与协作能力</span>
+                  <span class="lang-en hidden">Good communication and collaboration</span>
+                </p>
+              </div>
+              
+              <div class="bg-neutral-100 p-4 rounded-lg text-center card-hover">
+                <div class="text-primary text-3xl mb-2">
+                  <i class="fa fa-lightbulb-o"></i>
+                </div>
+                <h4 class="font-medium mb-1">
+                  <span class="lang-zh">解决问题</span>
+                  <span class="lang-en hidden">Problem Solving</span>
+                </h4>
+                <p class="text-sm text-neutral-600">
+                  <span class="lang-zh">逻辑思维与分析能力</span>
+                  <span class="lang-en hidden">Logical thinking and analysis</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 联系方式 -->
+    <section id="contact" class="py-16 md:py-24 bg-neutral-100">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+            <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-neutral-800 mb-4">
+              <span class="lang-zh">联系方式</span>
+              <span class="lang-en hidden">Contact Me</span>
+            </h2>
+            <div class="w-20 h-1 bg-primary mx-auto"></div>
+          </div>
+          
+          <div class="grid md:grid-cols-2 gap-8">
+            <!-- 联系信息 -->
+            <div>
+              <div class="bg-white rounded-xl shadow-md p-8 h-full">
+                <h3 class="text-xl font-bold text-primary mb-6">
+                  <span class="lang-zh">联系信息</span>
+                  <span class="lang-en hidden">Contact Information</span>
+                </h3>
+                
+                <div class="space-y-6">
+                  <div class="flex items-start">
+                    <div class="bg-primary/10 p-3 rounded-full text-primary mr-4">
+                      <i class="fa fa-map-marker"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-medium text-neutral-800 mb-1">
+                        <span class="lang-zh">地址</span>
+                        <span class="lang-en hidden">Address</span>
+                      </h4>
+                      <p class="text-neutral-600">
+                        <span class="lang-zh">河南省郑州市</span>
+                        <span class="lang-en hidden">Zhengzhou, Henan Province, China</span>
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start">
+                    <div class="bg-primary/10 p-3 rounded-full text-primary mr-4">
+                      <i class="fa fa-envelope"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-medium text-neutral-800 mb-1">
+                        <span class="lang-zh">邮箱</span>
+                        <span class="lang-en hidden">Email</span>
+                      </h4>
+                      <p class="text-neutral-600">lishuquan@example.com</p>
+                    </div>
+                  </div>
+                  
+                  <div class="flex items-start">
+                    <div class="bg-primary/10 p-3 rounded-full text-primary mr-4">
+                      <i class="fa fa-phone"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-medium text-neutral-800 mb-1">
+                        <span class="lang-zh">电话</span>
+                        <span class="lang-en hidden">Phone</span>
+                      </h4>
+                      <p class="text-neutral-600">+86 138 **** 5678</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="mt-8">
+                  <h4 class="font-medium text-neutral-800 mb-3">
+                    <span class="lang-zh">社交媒体</span>
+                    <span class="lang-en hidden">Social Media</span>
+                  </h4>
+                  <div class="flex space-x-4">
+                    <a href="#" class="bg-primary/10 hover:bg-primary/20 text-primary p-3 rounded-full transition-custom">
+                      <i class="fa fa-weixin"></i>
+                    </a>
+                    <a href="#" class="bg-primary/10 hover:bg-primary/20 text-primary p-3 rounded-full transition-custom">
+                      <i class="fa fa-linkedin"></i>
+                    </a>
+                    <a href="#" class="bg-primary/10 hover:bg-primary/20 text-primary p-3 rounded-full transition-custom">
+                      <i class="fa fa-github"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 联系表单 -->
+            <div>
+              <div class="bg-white rounded-xl shadow-md p-8 h-full">
+                <h3 class="text-xl font-bold text-primary mb-6">
+                  <span class="lang-zh">发送消息</span>
+                  <span class="lang-en hidden">Send Message</span>
+                </h3>
+                
+                <form id="contactForm" class="space-y-6">
+                  <div>
+                    <label for="name" class="block text-sm font-medium text-neutral-700 mb-1">
+                      <span class="lang-zh">姓名</span>
+                      <span class="lang-en hidden">Name</span>
+                    </label>
+                    <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-custom" placeholder="你的姓名">
+                  </div>
+                  
+                  <div>
+                    <label for="email" class="block text-sm font-medium text-neutral-700 mb-1">
+                      <span class="lang-zh">邮箱</span>
+                      <span class="lang-en hidden">Email</span>
+                    </label>
+                    <input type="email" id="email" name="email" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-custom" placeholder="你的邮箱">
+                  </div>
+                  
+                  <div>
+                    <label for="subject" class="block text-sm font-medium text-neutral-700 mb-1">
+                      <span class="lang-zh">主题</span>
+                      <span class="lang-en hidden">Subject</span>
+                    </label>
+                    <input type="text" id="subject" name="subject" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-custom" placeholder="消息主题">
+                  </div>
+                  
+                  <div>
+                    <label for="message" class="block text-sm font-medium text-neutral-700 mb-1">
+                      <span class="lang-zh">消息内容</span>
+                      <span class="lang-en hidden">Message</span>
+                    </label>
+                    <textarea id="message" name="message" rows="4" class="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-custom" placeholder="请输入你的消息..."></textarea>
+                  </div>
+                  
+                  <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 px-4 rounded-lg transition-custom flex items-center justify-center">
+                    <span class="lang-zh">发送消息</span>
+                    <span class="lang-en hidden">Send Message</span>
+                    <i class="fa fa-paper-plane ml-2"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 页脚 -->
+  <footer class="bg-primary text-white py-12">
+    <div class="container mx-auto px-4">
+      <div class="max-w-4xl mx-auto text-center">
+        <div class="flex justify-center mb-6">
+          <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white mr-3">
+            <span class="font-bold text-lg">李</span>
+          </div>
+        </div>
+        
+        <h3 class="text-2xl font-bold mb-4">
+          <span class="lang-zh">李书全</span>
+          <span class="lang-en hidden">Shuquan Li</span>
+        </h3>
+        
+        <p class="text-white/80 mb-8 max-w-lg mx-auto">
+          <span class="lang-zh">会计专业与计算机技术的结合，为财务领域带来创新解决方案</span>
+          <span class="lang-en hidden">Combining accounting expertise with computer technology to bring innovative solutions to the financial field</span>
+        </p>
+        
+        <div class="flex justify-center space-x-4 mb-8">
+          <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-custom">
+            <i class="fa fa-weixin"></i>
+          </a>
+          <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-custom">
+            <i class="fa fa-linkedin"></i>
+          </a>
+          <a href="#" class="bg-white/10 hover:bg-white/20 p-3 rounded-full transition-custom">
+            <i class="fa fa-github"></i>
+          </a>
+        </div>
+        
+        <p class="text-white/60 text-sm">
+          <span class="lang-zh">© 2025 李书全. 保留所有权利.</span>
+          <span class="lang-en hidden">© 2025 Shuquan Li. All rights reserved.</span>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 返回顶部按钮 -->
+  <button id="backToTop" class="fixed bottom-6 right-6 bg-primary text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:bg-primary/90">
+    <i class="fa fa-arrow-up"></i>
+  </button>
+
+  <!-- JavaScript -->
+  <script>
+    // 语言切换功能
+    const langToggle = document.getElementById('langToggle');
+    const currentLang = document.getElementById('currentLang');
+    const langElements = document.querySelectorAll('.lang-zh, .lang-en');
+    let isChinese = true;
+    
+    langToggle.addEventListener('click', () => {
+      // 添加淡入淡出效果
+      langElements.forEach(el => {
+        el.classList.add('lang-fade');
+      });
+      
+      setTimeout(() => {
+        isChinese = !isChinese;
+        
+        langElements.forEach(el => {
+          if (isChinese) {
+            el.classList.toggle('hidden', el.classList.contains('lang-en'));
+          } else {
+            el.classList.toggle('hidden', el.classList.contains('lang-zh'));
+          }
+          el.classList.remove('lang-fade');
+        });
+        
+        currentLang.textContent = isChinese ? '中文' : 'English';
+      }, 300);
+    });
+    
+    // 移动端菜单
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    
+    menuToggle.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.contains('opacity-100');
+      
+      if (isOpen) {
+        mobileMenu.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+        mobileMenu.classList.add('-translate-y-full', 'opacity-0', 'pointer-events-none');
+        menuToggle.innerHTML = '<i class="fa fa-bars text-xl"></i>';
+      } else {
+        mobileMenu.classList.remove('-translate-y-full', 'opacity-0', 'pointer-events-none');
+        mobileMenu.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+        menuToggle.innerHTML = '<i class="fa fa-times text-xl"></i>';
+      }
+    });
+    
+    // 导航栏滚动效果
+    const navbar = document.getElementById('navbar');
+    
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('py-2', 'shadow-md');
+        navbar.classList.remove('py-3');
+      } else {
+        navbar.classList.add('py-3');
+        navbar.classList.remove('py-2', 'shadow-md');
+      }
+    });
+    
+    // 返回顶部按钮
+    const backToTopButton = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopButton.classList.remove('opacity-0', 'invisible');
+        backToTopButton.classList.add('opacity-100', 'visible');
+      } else {
+        backToTopButton.classList.remove('opacity-100', 'visible');
+        backToTopButton.classList.add('opacity-0', 'invisible');
+      }
+    });
+    
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        // 如果是移动端并且菜单是打开的，点击后关闭菜单
+        if (mobileMenu.classList.contains('opacity-100')) {
+          mobileMenu.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+          mobileMenu.classList.add('-translate-y-full', 'opacity-0', 'pointer-events-none');
+          menuToggle.innerHTML = '<i class="fa fa-bars text-xl"></i>';
+        }
+        
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+    
+    // 表单提交处理
+    const contactForm = document.getElementById('contactForm');
+    
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      // 这里可以添加表单验证和提交逻辑
+      alert('消息已发送，感谢您的联系！');
+      contactForm.reset();
+    });
+    
+    // 页面加载完成后隐藏加载动画
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const loader = document.getElementById('loader');
+        loader.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 500);
+      }, 800);
+    });
+  </script>
 </body>
 </html>
+    
